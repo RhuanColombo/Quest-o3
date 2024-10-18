@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tarefas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        input, button {
+            margin: 5px 0;
+        }
+
+        .tarefa-concluida {
+            text-decoration: line-through;
+            color: green;
+        }
+
+        .tarefa-nao-concluida {
+            color: red;
+        }
+
+        .tarefa-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .tarefa-checkbox {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Tarefas</h1>
+
+    <label for="descricao">Descrição da tarefa:</label>
+    <input type="text" id="descricao" placeholder="Nova tarefa">
+    <button id="adicionarBtn">Adicionar</button>
+
+    <h2>Tarefas:</h2>
+    <div id="listaTarefas"></div>
+
+    <script>
+        let listaDeTarefas = [];
+
+        function atualizarListaDeTarefas() {
+            const listaTarefasDiv = document.getElementById('listaTarefas');
+            listaTarefasDiv.innerHTML = '';
+
+            listaDeTarefas.forEach((tarefa, index) => {
+                const tarefaItem = document.createElement('div');
+                tarefaItem.className = 'tarefa-item';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'tarefa-checkbox';
+                checkbox.checked = tarefa.status;
+
+                checkbox.addEventListener('change', function() {
+                    listaDeTarefas[index].status = this.checked;
+                    atualizarListaDeTarefas();
+                });
+                const descricaoTarefa = document.createElement('span');
+                descricaoTarefa.textContent = tarefa.descricao;
+
+                if (tarefa.status) {
+                    descricaoTarefa.classList.add('tarefa-concluida');
+                } else {
+                    descricaoTarefa.classList.add('tarefa-nao-concluida');
+                }
+
+                tarefaItem.appendChild(checkbox);
+                tarefaItem.appendChild(descricaoTarefa);
+
+                listaTarefasDiv.appendChild(tarefaItem);
+            });
+        }
+
+        document.getElementById('adicionarBtn').addEventListener('click', function() {
+            const descricaoInput = document.getElementById('descricao').value.trim();
+
+            if (descricaoInput !== "") {
+                const novaTarefa = {
+                    descricao: descricaoInput,
+                    status: false
+                };
+
+                listaDeTarefas.push(novaTarefa);
+                atualizarListaDeTarefas();
+
+                document.getElementById('descricao').value = "";
+            }
+        });
+
+        atualizarListaDeTarefas();
+    </script>
+</body>
+</html>
